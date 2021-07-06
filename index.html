@@ -70,7 +70,7 @@
         <i class="fa fa-link" aria-hidden="true"></i>
       </button>
 
-      <button class="active" type="button" data-cmd="showCode">
+      <button class="" type="button" data-cmd="showCode" name="active">
         <i class="fa fa-code" aria-hidden="true"></i>
       </button>
     </div>
@@ -78,7 +78,67 @@
   <iframe id="output" name="textField"></iframe>
 </body>
 <script>
-  const buttons=document.querySelectorAll('button');
+  const buttons = document.querySelectorAll('button');
+  let show = false;
   textField.document.designMode = "On"
+  for (let i = 0; i < buttons.length; i++) {
+     buttons[i].addEventListener('click', () =>{
+       
+      let cmd = buttons[i].getAttribute('data-cmd');
+
+      if(buttons[i].name === "active"){
+        buttons[i].classList.toggle('active');
+      }
+
+      if(cmd === "insertImage" || cmd === "createLink"){
+
+        let url = prompt("Enter link here: ", "");
+        textField.document.execCommand(cmd, false, url);
+
+        if(cmd === "insertImage"){
+
+          const images = textField.document.querySelectorAll('img');
+
+          images.forEach(item => {
+            item.style.maxWidth = "500px";
+          });
+
+        } else {
+
+          const links = textField.document.querySelectorAll('a');
+
+          links.forEach(item => {
+
+            item.target = '_blank';
+
+            item.addEventListener('mouseover', () => {
+              textField.document.designMode = 'Off';
+            });
+
+            item.addEventListener('mouseout', () => {
+              textField.document.designMode = 'On';
+            });
+
+          });
+
+        }
+      } else {
+        textField.document.execCommand(cmd, false, null);
+      }
+
+      if(cmd === "showCode"){
+        const textBody = textField.document.querySelector('body');
+        if(show){
+          textBody.innerHTML = textBody.textContent;
+          show = false;
+        } else {
+          textBody.textContent = textBody.innerHTML;
+          show = true;
+        }
+      }
+
+     });
+    
+  }
 </script>
 </html>
