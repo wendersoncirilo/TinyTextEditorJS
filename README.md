@@ -1,1 +1,1 @@
-# TinyTextEditorJS
+# Tiny Rich Text Editor
